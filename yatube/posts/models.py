@@ -29,7 +29,7 @@ class Post(models.Model):
         verbose_name='Текст',
         help_text='Текст нового поста')
     pub_date = models.DateTimeField(
-        verbose_name='Дата создания',
+        "Дата публикации",
         auto_now_add=True,
         db_index=True)
     author = models.ForeignKey(
@@ -59,13 +59,13 @@ class Post(models.Model):
         return self.text[:NUMBER_OF_CHARACTERS]
 
 
-class Comment(CreatedModel):
+class Comment(models.Model):
     post = models.ForeignKey(
         Post, blank=True,
         null=True,
         on_delete=models.SET_NULL,
         related_name='comments',
-        verbose_name='Пост'
+        verbose_name='Комментарий'
     )
     author = models.ForeignKey(
         User,
@@ -77,6 +77,9 @@ class Comment(CreatedModel):
         verbose_name='Текст комментария',
         help_text='Введите текст комментария'
     )
+    pub_date = models.DateTimeField(
+        verbose_name='Дата публикации',
+        auto_now_add=True)
 
     class Meta:
         ordering = ["-pub_date"]
