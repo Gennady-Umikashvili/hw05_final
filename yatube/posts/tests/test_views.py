@@ -2,6 +2,7 @@ import shutil
 import tempfile
 
 from django.test import Client, TestCase, override_settings
+from django.urls import reverse
 from django import forms
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -165,15 +166,18 @@ class PostPagesTests(TestCase):
         comments_count = Comment.objects.count()
         form_data = {"text": "Тестовый коммент"}
         response = self.authorized_client.post(
-            reverse("posts:add_comment", kwargs={"post_id": self.post.id}),
+            reverse("posts:add_comment",
+                    kwargs={"post_id": self.post.id}),
             data=form_data,
             follow=True,
         )
         self.assertRedirects(
-            response, reverse("posts:post_detail", kwargs={"post_id": self.post.id})
+            response, reverse("posts:post_detail",
+                              kwargs={"post_id": self.post.id})
         )
         self.assertEqual(Comment.objects.count(), comments_count + 1)
-        self.assertTrue(Comment.objects.filter(text="Тестовый коммент").exists())
+        self.assertTrue(
+            Comment.objects.filter(text="Тестовый коммент").exists())
 
     def test_check_cache(self):
         """Проверка кеша."""
@@ -183,6 +187,7 @@ class PostPagesTests(TestCase):
         response2 = self.guest_client.get(reverse("posts:index"))
         cash2 = response2.content
         self.assertEqual(cash, cash2)
+
 
 class FollowTests(TestCase):
     @classmethod
