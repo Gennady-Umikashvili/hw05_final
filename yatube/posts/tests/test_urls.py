@@ -85,7 +85,6 @@ class PostURLTests(TestCase):
         resp = self.author.get(f'/posts/{self.post.id}/edit/')
         self.assertTemplateUsed(resp, 'posts/create_post.html')
 
-
     def test_404_page(self):
         """Страница 404 для несуществующих страниц."""
         url = '/unexisting_page/'
