@@ -33,6 +33,8 @@ class PostURLTests(TestCase):
         self.author.force_login(self.author_post)
         self.other = Client()
         self.other.force_login(self.other_user)
+        self.authorized_client = Client()
+        self.authorized_client_no_author = Client()
 
     def test_post_list_url_exists_at_desired_location_for_all(self):
         """Тест доступности страницы по ожидаемому адресу."""
@@ -82,3 +84,18 @@ class PostURLTests(TestCase):
                 self.assertTemplateUsed(response, template)
         resp = self.author.get(f'/posts/{self.post.id}/edit/')
         self.assertTemplateUsed(resp, 'posts/create_post.html')
+
+
+    def test_404_page(self):
+        """Страница 404 для несуществующих страниц."""
+        url = '/unexisting_page/'
+        clients = (
+            self.authorized_client,
+            self.authorized_client_no_author,
+            self.client,
+        )
+        for role in clients:
+            with self.subTest(url=url):
+                response = role.get(url, follow=True)
+                self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+                self.assertTemplateUsed(response, 'core/404.html')

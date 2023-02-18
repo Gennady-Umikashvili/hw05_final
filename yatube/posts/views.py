@@ -97,8 +97,7 @@ def add_comment(request, post_id):
 @login_required
 def follow_index(request):
     follower = Follow.objects.filter(user=request.user).values_list(
-        'author_id', flat=True
-    )
+        'author_id', flat=True)
     posts = Post.objects.filter(author_id__in=follower)
     page_obj = get_page_content(posts, request.GET.get('page'))
     return render(request, 'posts/follow.html',
