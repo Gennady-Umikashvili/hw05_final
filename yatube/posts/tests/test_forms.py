@@ -3,7 +3,6 @@ from http import HTTPStatus
 
 from django.test import Client, TestCase
 from django.urls import reverse
-# from django import forms
 
 from posts.forms import PostForm
 from posts.models import Group, Post, User
@@ -170,5 +169,3 @@ class PostCreateFormTest(TestCase):
         self.assertEqual(post.group, edited_post.group)
         self.assertEqual(post.author, edited_post.author)
         self.assertEqual(post.pub_date, edited_post.pub_date)
-    
-

@@ -54,6 +54,7 @@ def post_detail(request, post_id):
                            'form': form,
                            'comments': comments})
 
+
 @login_required
 def post_create(request):
     form = PostForm(request.POST or None)
@@ -100,7 +101,7 @@ def follow_index(request):
     )
     posts = Post.objects.filter(author_id__in=follower)
     page_obj = get_page_content(posts, request.GET.get('page'))
-    return render(request, 'posts/follow.html', 
+    return render(request, 'posts/follow.html',
                   context={'page_obj': page_obj})
 
 
