@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Об авторе проекта{% endblock %}
+{% block content %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 p-5">
+        <h1>Привет, я автор меня зовут<br>Геннадий Умикашвили</h1>
+        <img src="{% static 'img/111.jpeg' %}" width="400" height="300" <br>
+        <p>
+          <i>
+            Я не так давно я начал писать на python, и хочу дальше продолжить этим заниматься.  <br>
+            Это мой первый проект и надеюсь он Вам понравиться.<br>
+          </i>
+        </p>
+        <a href="https://github.com/Gennady-Umikashvili"> "GITHUB" где Вы можете ознакомиться с моими проектами </a>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

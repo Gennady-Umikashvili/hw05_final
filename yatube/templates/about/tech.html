@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Технологии{% endblock %}
+{% block content %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 p-5">
+        <div class="row">
+          <h1>Вот что я умею</h1>
+          <aside class="col-12 col-md-3">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                Python
+              </li>
+              <li class="list-group-item">
+                Django
+              </li>
+            </ul>
+          </aside>
+          <article class="col-12 col-md-9">
+            <p>"Все что я изучил на курсе Яндекс Практикума мне пригодилось в создании данного сайта"</p>
+          </article>
+        </div>
+        <img src="{% static 'img/11.jpg' %}" width="400" height="300" <br>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
