@@ -98,18 +98,3 @@ class PostURLTests(TestCase):
                 response = role.get(url, follow=True)
                 self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
                 self.assertTemplateUsed(response, 'core/404.html')
-
-
-    # def test_403_page(self):
-    #     """Страница 403, ошибка проверки CSRF."""
-    #     url = '/unexisting_page/'
-    #     clients = (
-    #         self.authorized_client,
-    #         self.authorized_client_no_author,
-    #         self.client,
-    #     )
-    #     for role in clients:
-    #         with self.subTest(url=url):
-    #             response = role.get(url, follow=True)
-    #             self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
-    #             self.assertTemplateUsed(response, 'core/403csrf.html')
