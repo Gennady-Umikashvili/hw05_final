@@ -193,11 +193,11 @@ class FollowTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_follower = User.objects.create_user(username='user')
-        cls.user_following = User.objects.create_user(username='user_1')
+        cls.user_follower = User.objects.create_user(username='User')
+        cls.user_following = User.objects.create_user(username='User2')
         cls.post = Post.objects.create(
             author=cls.user_following,
-            text='Тестовый текст',
+            text=TEXT,
         )
 
     def setUp(self):
@@ -227,7 +227,7 @@ class FollowTests(TestCase):
         self.assertEqual(Follow.objects.count(), follower_count - 1)
 
     def test_new_post_see_follower(self):
-        """Пост появляется в ленте подписавшихся."""
+        """Пост появился в ленте подписавшихся."""
         posts = Post.objects.create(
             text=self.post.text,
             author=self.user_following,

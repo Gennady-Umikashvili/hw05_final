@@ -42,7 +42,7 @@ class PostCreateFormTest(TestCase):
         self.authorized_client2.force_login(self.user2)
 
     def test_create_post_form(self):
-        """Проверка: Создаётся ли новая запись в базе данных, создавая пост"""
+        """Создаёт новую запись в базе данных, создавая пост"""
         post_count = Post.objects.count()
         form_data = {
             'text': NEW_TEXT,
@@ -64,7 +64,7 @@ class PostCreateFormTest(TestCase):
         self.assertEqual(post.author, self.user)
 
     def test_create_post_form_without_group(self):
-        """Проверка: Создаётся ли новая запись в базе данных,
+        """Создаёт новую запись в базе данных,
         создавая пост без группы"""
         post_count = Post.objects.count()
         form_data = {
@@ -87,7 +87,7 @@ class PostCreateFormTest(TestCase):
         self.assertEqual(post.author, self.user)
 
     def test_create_post_form_by_guest(self):
-        """Проверка: Не создаётся новая запись в базе данных,
+        """Не создаёт новую запись в базе данных,
         создавая пост неавторизованным пользователем"""
         post_count = Post.objects.count()
         form_data = {
@@ -107,7 +107,7 @@ class PostCreateFormTest(TestCase):
         self.assertEqual(post_count, new_post_count)
 
     def test_edit_post_form(self):
-        """Проверка: происходит ли изменение поста в базе данных"""
+        """Происходит ли изменение поста в базе данных"""
         post_count = Post.objects.count()
         post = Post.objects.get(pk=self.post.pk)
         form_data = {
@@ -129,7 +129,7 @@ class PostCreateFormTest(TestCase):
         self.assertEqual(edited_post.group.id, form_data['group'])
 
     def test_post_not_edit_by_guest_client(self):
-        """Проверка: не изменится ли запись в Post если неавторизован."""
+        """Не изменится запись в Post если неавторизован."""
         posts_count = Post.objects.count()
         post = Post.objects.get(pk=self.post.pk)
         form_data = {"text": NEW_TEXT, "group": self.group.id}
@@ -150,7 +150,7 @@ class PostCreateFormTest(TestCase):
         self.assertEqual(post.pub_date, edited_post.pub_date)
 
     def test_post_not_edit_by_not_author(self):
-        """Проверка: не изменится ли запись в Post если не автор."""
+        """Не изменится запись в Post если не автор."""
         posts_count = Post.objects.count()
         post = Post.objects.get(pk=self.post.pk)
         form_data = {"text": NEW_TEXT, "group": self.group.id}

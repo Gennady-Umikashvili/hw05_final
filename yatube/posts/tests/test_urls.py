@@ -37,7 +37,7 @@ class PostURLTests(TestCase):
         self.authorized_client_no_author = Client()
 
     def test_post_list_url_exists_at_desired_location_for_all(self):
-        """Тест доступности страницы по ожидаемому адресу."""
+        """Доступность страницы по ожидаемому адресу."""
         pages_status = (
             [reverse('posts:index'),
                 self.guest, HTTPStatus.OK],
@@ -70,7 +70,7 @@ class PostURLTests(TestCase):
             resp, '/auth/login/?next=%2Fcreate%2F', HTTPStatus.FOUND)
 
     def test_accordance_urls_and_templates(self):
-        """Проверка на соответствие урл и шаблонов"""
+        """Соответствие урл и шаблонов"""
         url_templates_names = {
             '/': 'posts/index.html',
             '/group/slug/': 'posts/group_list.html',
@@ -98,3 +98,18 @@ class PostURLTests(TestCase):
                 response = role.get(url, follow=True)
                 self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
                 self.assertTemplateUsed(response, 'core/404.html')
+
+
+    # def test_403_page(self):
+    #     """Страница 403, ошибка проверки CSRF."""
+    #     url = '/unexisting_page/'
+    #     clients = (
+    #         self.authorized_client,
+    #         self.authorized_client_no_author,
+    #         self.client,
+    #     )
+    #     for role in clients:
+    #         with self.subTest(url=url):
+    #             response = role.get(url, follow=True)
+    #             self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+    #             self.assertTemplateUsed(response, 'core/403csrf.html')
