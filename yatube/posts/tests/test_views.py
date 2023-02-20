@@ -156,7 +156,6 @@ class PostPagesTests(TestCase):
         self.assertEqual(len(post_comments), 0)
         self.assertIn("text", post_form.fields.keys())
 
-
     def test_post_not_in_other_group(self):
         """Созданный пост не появился в иной группе"""
         response = self.authorized_client.get(
@@ -165,7 +164,6 @@ class PostPagesTests(TestCase):
         self.assertNotIn(self.post, response.context.get("page_obj"))
         group2 = response.context.get("group")
         self.assertNotEqual(group2, self.group)
-
 
     def test_check_cache(self):
         """Проверка кеша."""
@@ -177,6 +175,7 @@ class PostPagesTests(TestCase):
         self.assertEqual(cash, cash2)
         cache.clear()
         self.assertNotEqual(cash, cash2)
+
 
 class FollowTests(TestCase):
     @classmethod
@@ -201,7 +200,11 @@ class FollowTests(TestCase):
             )
         )
         self.assertEqual(Follow.objects.count(), follower_count + 1)
-        self.assertTrue(Follow.objects.filter(author=self.user_following, user=self.user_follower).exists())
+        self.assertTrue(
+            Follow.objects.filter(
+                author=self.user_following, user=self.user_follower
+            ).exists()
+        )
 
     def test_unfollow(self):
         """Зарегистрированный пользователь может отписаться."""
