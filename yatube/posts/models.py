@@ -8,13 +8,9 @@ NUMBER_OF_CHARACTERS = 15
 
 
 class Group(models.Model):
-    title = models.CharField(
-        max_length=200,
-        verbose_name="Заглавие")
-    slug = models.SlugField(
-        unique=True,
-        verbose_name="Значение")
-    description = models.TextField(verbose_name="Описание")
+    title = models.CharField("Заглавие", max_length=200)
+    slug = models.SlugField("Значение", unique=True)
+    description = models.TextField("Описание")
 
     class Meta:
         verbose_name = "Группа"
@@ -25,33 +21,29 @@ class Group(models.Model):
 
 
 class Post(models.Model):
-    text = models.TextField(
-        verbose_name='Текст',
-        help_text='Текст нового поста')
+    text = models.TextField("Текст", help_text="Текст нового поста")
     pub_date = models.DateTimeField(
-        "Дата публикации",
-        auto_now_add=True,
-        db_index=True)
+        "Дата публикации", auto_now_add=True, db_index=True
+    )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='posts',
-        verbose_name="Автор")
+        related_name="posts",
+        verbose_name="Автор",
+    )
     group = models.ForeignKey(
         Group,
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='posts',
-        verbose_name='Группа',
-        help_text='Группа, к которой будет относиться пост')
-    image = models.ImageField(
-        upload_to='posts/',
-        blank=True,
-        verbose_name='Картинка')
+        related_name="posts",
+        verbose_name="Группа",
+        help_text="Группа, к которой будет относиться пост",
+    )
+    image = models.ImageField("Картинка", upload_to="posts/", blank=True)
 
     class Meta:
-        ordering = ('-pub_date',)
+        ordering = ("-pub_date",)
         verbose_name = "Пост"
         verbose_name_plural = "Посты"
 
@@ -61,35 +53,39 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(
-        Post, blank=True,
+        Post,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='comments',
-        verbose_name='Комментарий'
+        related_name="comments",
+        verbose_name="Комментарий",
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='comments',
-        verbose_name='Автор'
+        related_name="comments",
+        verbose_name="Автор",
     )
     text = models.TextField(
-        verbose_name='Текст комментария',
-        help_text='Введите текст комментария'
+        "Текст комментария", help_text="Введите текст комментария"
     )
-    pub_date = models.DateTimeField(
-        verbose_name='Дата публикации',
-        auto_now_add=True)
+    pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
 
     class Meta:
-        ordering = ["-pub_date"]
+        ordering = ("-pub_date",)
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
 
     def __str__(self):
         return self.text
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE,
-                             related_name="follower")
-    author = models.ForeignKey(User, on_delete=models.CASCADE,
-                               related_name="following")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="follower"
+    )
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="following"
+    )
+
+    class Meta:
+        models.UniqueConstraint(fields=["user", "author"], name="following")
