@@ -170,16 +170,6 @@ class PostCreateFormTest(TestCase):
             data=form_data,
             follow=True,
         )
-
-    def test_comment_correct_context_by_guest(self):
-        """Валидная форма Комментария не создает запись в Post. от гостя"""
-        comments_count = Comment.objects.count()
-        form_data = {"text": "Тестовый коммент"}
-        response = self.guest_client.post(
-            reverse("posts:add_comment", kwargs={"post_id": self.post.id}),
-            data=form_data,
-            follow=True,
-        )
         self.assertRedirects(
             response, f"/auth/login/?next=/posts/{self.post.id}/comment/"
         )

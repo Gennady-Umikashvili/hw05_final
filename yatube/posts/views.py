@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from .forms import PostForm, CommentForm
-from .models import Group, Post, User, Comment, Follow
+from .models import Group, Post, User, Follow
 
 NUMBERS_OF_POSTS = 10
 
@@ -55,7 +55,6 @@ def post_detail(request, post_id):
     form = CommentForm()
     post = get_object_or_404(Post, pk=post_id)
     comments = post.comments.all()
-    post_count = post.author.posts.count()
     return render(
         request,
         "posts/post_detail.html",
@@ -110,9 +109,6 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
-    follower = Follow.objects.filter(user=request.user).values_list(
-        "author_id", flat=True
-    )
     posts = Post.objects.filter(author__following__user=request.user)
     page_obj = get_page_content(posts, request.GET.get("page"))
     return render(request, "posts/follow.html", context={"page_obj": page_obj})

@@ -8,7 +8,7 @@ from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.cache import cache
 
-from posts.models import Group, Post, User, Comment, Follow
+from posts.models import Group, Post, User, Follow
 
 COUNT_POST_PAGE_1 = 10
 COUNT_POST_PAGE_2 = 3
