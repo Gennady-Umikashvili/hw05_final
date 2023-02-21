@@ -40,9 +40,10 @@ class PostURLTests(TestCase):
                 HTTPStatus.OK,
             ],
             [
-                reverse("posts:profile", kwargs={
-                    "username": self.author_post.username
-                }),
+                reverse(
+                    "posts:profile",
+                    kwargs={"username": self.author_post.username},
+                ),
                 self.guest,
                 HTTPStatus.OK,
             ],
