@@ -54,8 +54,7 @@ class PostPagesTests(TestCase):
             reverse(
                 "posts:post_edit", kwargs={"post_id": self.post.id}
             ): "posts/create_post.html",
-            reverse(
-                "posts:follow_index"):"posts/follow.html",
+            reverse("posts:follow_index"): "posts/follow.html",
         }
         for reverse_name, template in templates_page_names.items():
             with self.subTest(template=template):
@@ -263,7 +262,6 @@ class PostImageTests(TestCase):
             author=cls.user, text=TEXT, group=cls.group, image=cls.uploaded
         )
 
-
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()
@@ -338,7 +336,7 @@ class PaginatorViewsTest(TestCase):
         )
         pages_units = (
             ("?page=1", COUNT_POST_PAGE_1),
-            ("?page=2", COUNT_POST_PAGE_2)
+            ("?page=2", COUNT_POST_PAGE_2),
         )
         for address, args in pagin_urls:
             for page, count_posts in pages_units:

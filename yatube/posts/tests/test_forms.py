@@ -221,5 +221,3 @@ class PostCreateFormTest(TestCase):
         self.assertEqual(post.group.id, form_data["group"])
         self.assertEqual(post.author, self.user)
         self.assertEqual(post.image.name, f"posts/{filename}")
-
-

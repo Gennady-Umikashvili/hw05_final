@@ -66,15 +66,9 @@ class PostURLTests(TestCase):
                 self.author,
                 HTTPStatus.OK,
             ],
-            [
-                reverse("posts:follow_index"), self.other,
-                HTTPStatus.OK,
-            ],
-            [
-                reverse("posts:follow_index"), self.guest,
-                HTTPStatus.FOUND,
-            ],
-                ["/unexisting_page/", self.guest, HTTPStatus.NOT_FOUND],
+            [reverse("posts:follow_index"), self.other, HTTPStatus.OK,],
+            [reverse("posts:follow_index"), self.guest, HTTPStatus.FOUND,],
+            ["/unexisting_page/", self.guest, HTTPStatus.NOT_FOUND],
         )
         for address, client, code in pages_status:
             with self.subTest(address=address, client=client):
