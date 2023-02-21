@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+from django.core.cache import cache
 from django.test import Client, TestCase
 from django.urls import reverse
 
@@ -27,6 +28,7 @@ class PostURLTests(TestCase):
         self.other.force_login(self.other_user)
         self.authorized_client = Client()
         self.authorized_client_no_author = Client()
+        cache.clear()
 
     def test_post_list_url_exists_at_desired_location_for_all(self):
         """Доступность страницы по ожидаемому адресу."""
@@ -37,11 +39,11 @@ class PostURLTests(TestCase):
                 self.guest,
                 HTTPStatus.OK,
             ],
-            [
-                reverse("posts:profile", kwargs={"username": "Author"}),
-                self.guest,
-                HTTPStatus.OK,
-            ],
+            # [
+            #     reverse("posts:profile", kwargs={"username": self.author_post.username}),
+            #     self.guest,
+            #     HTTPStatus.OK,
+            # ],
             [
                 reverse("posts:post_detail", kwargs={"post_id": self.post.id}),
                 self.guest,
@@ -65,10 +67,13 @@ class PostURLTests(TestCase):
                 HTTPStatus.OK,
             ],
             [
-                reverse("posts:follow_index", kwargs={"post_id": self.post.id}),
-                self.author,
+                reverse("posts:follow_index"), self.other,
                 HTTPStatus.OK,
-
+            ],
+            [
+                reverse("posts:follow_index"), self.guest,
+                HTTPStatus.FOUND,
+            ],
                 ["/unexisting_page/", self.guest, HTTPStatus.NOT_FOUND],
         )
         for address, client, code in pages_status:

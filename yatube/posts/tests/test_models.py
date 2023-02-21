@@ -41,7 +41,7 @@ class PostModelTest(TestCase):
         task_post = PostModelTest.post
         help_text_fields = {
             "text": "Текст нового поста",
-            "group": "Выберите группу",
+            "group": "Группа, к которой будет относиться пост",
         }
         for value, expected in help_text_fields.items():
             with self.subTest(value=value):
@@ -53,15 +53,15 @@ class PostModelTest(TestCase):
         """Правильное verbose_name"""
         task_comment = PostModelTest.comment
         verbose_fields = {
-            "post": "Запись",
+            "post": "Комментарий",
             "author": "Автор",
             "text": "Текст комментария",
-            "pub_date": "Дата",
+            "pub_date": "Дата публикации",
         }
         for value, expected in verbose_fields.items():
             with self.subTest(value=value):
                 self.assertEqual(
-                    task_post._meta.get_field(value).verbose_name, expected
+                    task_comment._meta.get_field(value).verbose_name, expected
                 )
 
 

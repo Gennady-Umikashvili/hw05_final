@@ -55,8 +55,7 @@ class PostPagesTests(TestCase):
                 "posts:post_edit", kwargs={"post_id": self.post.id}
             ): "posts/create_post.html",
             reverse(
-                "posts:follow_index", kwargs={"post_id": self.post.id}
-            ): "posts/follow.html",
+                "posts:follow_index"):"posts/follow.html",
         }
         for reverse_name, template in templates_page_names.items():
             with self.subTest(template=template):
@@ -174,7 +173,9 @@ class PostPagesTests(TestCase):
         cash2 = response2.content
         self.assertEqual(cash, cash2)
         cache.clear()
-        self.assertNotEqual(cash, cash2)
+        response3 = self.guest_client.get(reverse("posts:index"))
+        cash3 = response3.content
+        self.assertNotEqual(cash, cash3)
 
 
 class FollowTests(TestCase):
@@ -262,6 +263,7 @@ class PostImageTests(TestCase):
             author=cls.user, text=TEXT, group=cls.group, image=cls.uploaded
         )
 
+
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()
@@ -269,6 +271,8 @@ class PostImageTests(TestCase):
 
     def setUp(self):
         self.guest_client = Client()
+        self.client = Client()
+        self.client.force_login(self.user)
 
     def test_image_in_group_list_page(self):
         """Картинка передается на страницу group_list."""
@@ -286,7 +290,7 @@ class PostImageTests(TestCase):
         )
         for url in templates:
             with self.subTest(url):
-                response = self.guest_client.get(url)
+                response = self.client.get(url)
                 obj = response.context["page_obj"][0]
                 self.assertEqual(obj.image, self.post.image)
 
@@ -323,6 +327,7 @@ class PaginatorViewsTest(TestCase):
 
     def setUp(self):
         self.authorized_author = Client()
+        self.authorized_author.force_login(self.user)
 
     def test_page_contains_ten_records(self):
         """Проверка: пагинация на 1, 2 странице index, group_list, profile"""
@@ -333,12 +338,12 @@ class PaginatorViewsTest(TestCase):
         )
         pages_units = (
             ("?page=1", COUNT_POST_PAGE_1),
-            ("?page=2", COUNT_POST_PAGE_2),
+            ("?page=2", COUNT_POST_PAGE_2)
         )
         for address, args in pagin_urls:
             for page, count_posts in pages_units:
                 with self.subTest(page=page):
                     response = self.authorized_author.get(
-                        reverse(address, kwargs=args) + page
+                        reverse(address, args=args) + page
                     )
             self.assertEqual(len(response.context["page_obj"]), count_posts)

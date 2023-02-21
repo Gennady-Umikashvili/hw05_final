@@ -1,5 +1,6 @@
 from unittest import TestCase
 from http import HTTPStatus
+import uuid
 
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -169,6 +170,20 @@ class PostCreateFormTest(TestCase):
             data=form_data,
             follow=True,
         )
+
+    def test_comment_correct_context_by_guest(self):
+        """Валидная форма Комментария не создает запись в Post. от гостя"""
+        comments_count = Comment.objects.count()
+        form_data = {"text": "Тестовый коммент"}
+        response = self.guest_client.post(
+            reverse("posts:add_comment", kwargs={"post_id": self.post.id}),
+            data=form_data,
+            follow=True,
+        )
+        self.assertRedirects(
+            response, f"/auth/login/?next=/posts/{self.post.id}/comment/"
+        )
+        self.assertEqual(Comment.objects.count(), comments_count)
         self.assertRedirects(
             response, f"/auth/login/?next=/posts/{self.post.id}/comment/"
         )
@@ -184,8 +199,9 @@ class PostCreateFormTest(TestCase):
             b"\x02\x00\x01\x00\x00\x02\x02\x0C"
             b"\x0A\x00\x3B"
         )
+        filename = str(uuid.uuid4()) + ".gif"
         uploaded = SimpleUploadedFile(
-            name="small.gif", content=small_gif, content_type="image/gif"
+            name=filename, content=small_gif, content_type="image/gif"
         )
         post_count = Post.objects.count()
         form_data = {
@@ -204,7 +220,6 @@ class PostCreateFormTest(TestCase):
         self.assertEqual(post.text, form_data["text"])
         self.assertEqual(post.group.id, form_data["group"])
         self.assertEqual(post.author, self.user)
-        self.assertEqual(post.image.name, "small.gif")
-        self.assertTrue(
-            Post.objects.filter(text=TEXT, image="posts/small.gif").exists()
-        )
+        self.assertEqual(post.image.name, f"posts/{filename}")
+
+
