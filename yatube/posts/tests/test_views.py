@@ -8,7 +8,8 @@ from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.cache import cache
 
-from posts.models import Group, Post, User, Follow
+from posts.models import Group, Post, User, Follow, Comment
+from posts.forms import CommentForm
 
 COUNT_POST_PAGE_1 = 10
 COUNT_POST_PAGE_2 = 3
@@ -142,6 +143,13 @@ class PostPagesTests(TestCase):
 
     def test_post_detail_list_page_show_correct_context(self):
         """Шаблон post_detail с правильным контекстом"""
+        comments_count = Comment.objects.count()
+        form_data = {
+            "text": "Тестовый комментарий",
+        }
+        Comment.objects.create(
+            author=self.user, text="Тестовый комментарий", post=self.post,
+        )
         response = self.authorized_client.get(
             reverse("posts:post_detail", kwargs={"post_id": self.post.id})
         )
@@ -151,8 +159,8 @@ class PostPagesTests(TestCase):
         self.assertEqual(post_detail.text, self.post.text)
         self.assertEqual(post_detail.group, self.post.group)
         self.assertEqual(post_detail.author, self.post.author)
-        self.assertEqual(len(post_comments), 0)
-        self.assertIn("text", post_form.fields.keys())
+        self.assertEqual(Post.objects.count(), comments_count + 1)
+        self.assertIsInstance(post_form, CommentForm)
 
     def test_post_not_in_other_group(self):
         """Созданный пост не появился в иной группе"""
@@ -166,15 +174,15 @@ class PostPagesTests(TestCase):
     def test_check_cache(self):
         """Проверка кеша."""
         response = self.guest_client.get(reverse("posts:index"))
-        cash = response.content
+        cache_data = response.content
         Post.objects.get(id=1).delete()
         response2 = self.guest_client.get(reverse("posts:index"))
-        cash2 = response2.content
-        self.assertEqual(cash, cash2)
+        cache_data2 = response2.content
+        self.assertEqual(cache_data, cache_data2)
         cache.clear()
         response3 = self.guest_client.get(reverse("posts:index"))
-        cash3 = response3.content
-        self.assertNotEqual(cash, cash3)
+        cache_data3 = response3.content
+        self.assertNotEqual(cache_data, cache_data3)
 
 
 class FollowTests(TestCase):

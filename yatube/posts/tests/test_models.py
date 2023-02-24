@@ -14,9 +14,6 @@ class PostModelTest(TestCase):
         cls.post = Post.objects.create(
             author=cls.user, text="TEXT_FOR_THE_TEST",
         )
-        cls.comment = Comment.objects.create(
-            author=cls.user, post=cls.post, text="COMMENT_FOR_THE_TEST"
-        )
 
     def test_models_have_correct_object_names(self):
         """Проверка: что у моделей корректно работает __str__, title"""
@@ -49,9 +46,35 @@ class PostModelTest(TestCase):
                     task_post._meta.get_field(value).help_text, expected
                 )
 
+
+class GroupModelTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.group = Group.objects.create(
+            title="Название", slug="slug", description="Описание",
+        )
+
+    def test_models_have_correct_object_names(self):
+        """Проверка: что у моделей корректно работает __str__, title"""
+        self.assertEqual(self.group.title, str(self.group))
+
+
+class CommentModelTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = User.objects.create_user(username="User")
+        cls.post = Post.objects.create(
+            author=cls.user, text="TEXT_FOR_THE_TEST",
+        )
+        cls.comment = Comment.objects.create(
+            author=cls.user, post=cls.post, text="COMMENT_FOR_THE_TEST"
+        )
+
     def test_comment_model_correct_verbose_name(self):
         """Правильное verbose_name"""
-        task_comment = PostModelTest.comment
+        task_comment = CommentModelTest.comment
         verbose_fields = {
             "post": "Комментарий",
             "author": "Автор",
@@ -63,17 +86,3 @@ class PostModelTest(TestCase):
                 self.assertEqual(
                     task_comment._meta.get_field(value).verbose_name, expected
                 )
-
-
-class GroupModelTest(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.user = User.objects.create_user(username="User")
-        cls.group = Group.objects.create(
-            title="Название", slug="slug", description="Описание",
-        )
-
-    def test_models_have_correct_object_names(self):
-        """Проверка: что у моделей корректно работает __str__, title"""
-        self.assertEqual(self.group.title, str(self.group))

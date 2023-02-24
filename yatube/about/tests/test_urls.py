@@ -11,7 +11,7 @@ class PostURLTests(TestCase):
         self.guest_client = Client()
 
     def test_urls_exists_at_desired_location(self):
-        """URL-????? ?????????? ? ?????????? ?????"""
+        """Доступность страницы по ожидаемому адресу."""
         templates = ["/about/author/", "/about/tech/"]
         for adress in templates:
             with self.subTest(adress):
@@ -19,7 +19,7 @@ class PostURLTests(TestCase):
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_urls_uses_correct_template(self):
-        """URL-????? ?????????? ?????????? ??????."""
+        """URL-адрес использует соответствующий шаблон."""
         templates_url_names = {
             "/about/author/": "about/author.html",
             "/about/tech/": "about/tech.html",

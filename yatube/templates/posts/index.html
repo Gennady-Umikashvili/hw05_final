@@ -9,7 +9,7 @@
       {% for post in page_obj %}
         {% include 'includes/post_list.html' with show_group=True %}
       {% endfor %}
-      {% include 'posts/includes/paginator.html' %}
-    </div>
   {% endcache %}
+  {% include 'posts/includes/paginator.html' %}
+  </div>
 {% endblock %}

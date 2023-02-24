@@ -22,8 +22,6 @@
   </a> <br>
   {% if show_group and post.group %}
     <a href="{% url 'posts:group_list' post.group.slug %}">все записи группы</a>
-  {% else %}
-    <a href="{% url 'posts:index' %}">группы нет {{ posts.group.title }}</a>
   {% endif %} <br>
 </article>
 {% if not forloop.last %}

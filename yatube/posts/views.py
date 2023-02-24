@@ -33,12 +33,10 @@ def group_posts(request, slug):
 def profile(request, username):
     user = get_object_or_404(User, username=username)
     posts = user.posts.all()
-    if request.user.is_authenticated and request.user != user:
-        following = Follow.objects.filter(
-            user=request.user, author=user
-        ).exists()
-    else:
-        following = False
+    following = (
+        request.user.is_authenticated
+        and Follow.objects.filter(user=request.user, author=user).exists()
+    )
     page_obj = get_page_content(posts, request.GET.get("page"))
     return render(
         request,
