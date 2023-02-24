@@ -144,9 +144,6 @@ class PostPagesTests(TestCase):
     def test_post_detail_list_page_show_correct_context(self):
         """Шаблон post_detail с правильным контекстом"""
         comments_count = Comment.objects.count()
-        form_data = {
-            "text": "Тестовый комментарий",
-        }
         Comment.objects.create(
             author=self.user, text="Тестовый комментарий", post=self.post,
         )
@@ -155,7 +152,6 @@ class PostPagesTests(TestCase):
         )
         post_detail = response.context["post"]
         post_form = response.context["form"]
-        post_comments = response.context["comments"]
         self.assertEqual(post_detail.text, self.post.text)
         self.assertEqual(post_detail.group, self.post.group)
         self.assertEqual(post_detail.author, self.post.author)
