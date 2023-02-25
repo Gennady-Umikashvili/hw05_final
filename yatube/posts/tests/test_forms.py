@@ -164,7 +164,7 @@ class PostCreateFormTest(TestCase):
         self.assertEqual(Comment.objects.count(), comments_count + 1)
         self.assertTrue(
             Comment.objects.filter(
-                text="Тестовый коммент", post=self.post.id, author=self.user
+                text=form_data["text"], post=self.post.id, author=self.user
             ).exists()
         )
 

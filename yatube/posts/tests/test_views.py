@@ -143,7 +143,6 @@ class PostPagesTests(TestCase):
 
     def test_post_detail_list_page_show_correct_context(self):
         """Шаблон post_detail с правильным контекстом"""
-        comments_count = Comment.objects.count()
         Comment.objects.create(
             author=self.user, text="Тестовый комментарий", post=self.post,
         )
@@ -155,8 +154,11 @@ class PostPagesTests(TestCase):
         self.assertEqual(post_detail.text, self.post.text)
         self.assertEqual(post_detail.group, self.post.group)
         self.assertEqual(post_detail.author, self.post.author)
-        self.assertEqual(Post.objects.count(), comments_count + 1)
         self.assertIsInstance(post_form, CommentForm)
+        self.assertEqual(
+            len(response.context["comments"]),
+            Post.objects.get(pk=self.post.pk).comments.count(),
+        )
 
     def test_post_not_in_other_group(self):
         """Созданный пост не появился в иной группе"""
